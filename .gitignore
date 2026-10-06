@@ -1,0 +1,36 @@
+# Окружения
+.venv/
+venv/
+env/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Артефакты ML
+artifacts/
+*.joblib
+*.pkl
+*.zip
+
+# Данные
+*.xlsx
+*.csv
+/data/
+
+# IDE
+.vscode/
+.idea/
+.DS_Store
+
+# Env
+.env
+
+# Poetry
+# (pyproject.toml и poetry.lock — КОММИТИМ!)
