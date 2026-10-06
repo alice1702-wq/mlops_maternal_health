@@ -7,23 +7,23 @@
 
 Production-ready ML-проект для классификации уровня риска беременности по клиническим показателям.
 
-## 🎯 Задача
+## Задача
 
 По 6 клиническим признакам (возраст, давление, глюкоза, температура, пульс) определить уровень риска беременности: `low risk`, `mid risk`, `high risk`.
 
 **Датасет:** [Maternal Health Risk Data Set](https://archive.ics.uci.edu/dataset/863/maternal+health+risk) — 1014 наблюдений, 3 класса.
 
-## 📊 Результаты
+## Результаты
 
 | Модель | F1-macro (test) | Accuracy (test) |
 |---|---|---|
-| **CatBoost** 🏆 | **0.867** | **0.862** |
+| **CatBoost** | **0.867** | **0.862** |
 | Random Forest | 0.819 | 0.816 |
 | Logistic Regression | 0.665 | 0.670 |
 
 **Метрика:** macro F1-score — обоснован дисбалансом классов (40/32/28%).
 
-## 🏗️ Структура проекта
+## Структура проекта
 
 ```
 ├── src/
@@ -49,7 +49,7 @@ Production-ready ML-проект для классификации уровня 
 └── poetry.lock
 ```
 
-## 🚀 Установка
+## Установка
 
 ```bash
 git clone https://github.com/alice1702-wq/mlops_maternal_health.git
@@ -57,7 +57,7 @@ cd mlops_maternal_health
 poetry install
 ```
 
-## ▶️ Запуск
+## Запуск
 
 ### Обучение моделей
 
@@ -74,7 +74,7 @@ poetry run train
 
 Открой `notebooks/eda.ipynb` в Jupyter или VSCode.
 
-## 🧪 Тесты и линтеры
+## Тесты и линтеры
 
 ```bash
 poetry run pytest -v          # 11 тестов
@@ -82,7 +82,7 @@ poetry run flake8 src/ tests/ # стиль
 poetry run black --check src/ # форматирование
 ```
 
-## 🛠️ Технологии
+## Технологии
 
 - **Python 3.11**, **Poetry** — управление зависимостями
 - **scikit-learn**, **CatBoost**, **Optuna** — ML
@@ -91,16 +91,15 @@ poetry run black --check src/ # форматирование
 - **pytest**, **black**, **flake8**, **pre-commit** — качество кода
 - **GitHub Actions** — CI/CD
 
-## 🔬 Методология
+## Методология
 
 ### Особенности реализации
 
-1. **Data leakage исправлен.** Winsorization выполняется через отдельный класс `Winsorizer` (паттерн fit/transform): границы вычисляются **только на train** и применяются к test.
-2. **Стратифицированный split** для сохранения пропорций классов.
-3. **Feature engineering** с медицинским обоснованием: PulsePressure, MAP, категории возраста и глюкозы по порогам ВОЗ.
-4. **CV** (5-fold) для оценки стабильности.
-5. **Анализ переобучения** через `OverfittingAnalyzer` (gap + ratio).
-6. **SHAP-анализ** для интерпретации модели.
+1. **Стратифицированный split** для сохранения пропорций классов.
+2. **Feature engineering** с медицинским обоснованием: PulsePressure, MAP, категории возраста и глюкозы по порогам ВОЗ.
+3. **CV** (5-fold) для оценки стабильности.
+4. **Анализ переобучения** через `OverfittingAnalyzer` (gap + ratio).
+5. **SHAP-анализ** для интерпретации модели.
 
 ### Feature Engineering
 
@@ -111,17 +110,17 @@ poetry run black --check src/ # форматирование
 - `HighBP_Flag`, `Tachycardia_Flag`, `Fever_Flag`
 - `RiskScore_Heuristic` — композитный скор
 
-## 📁 Данные
+## Данные
 
 Данные автоматически скачиваются с Яндекс.Диска при первом запуске (`src/data/loader.py`). В репозиторий **не коммитятся**.
 
-## 👩‍💻 Автор
+## Автор
 
 **Селезнева Алиса**
 Магистратура, 2 курс
 Уральский федеральный университет, ИРИТ-РТФ
 Курс: MLOps (преподаватель — А. А. Кошелев)
 
-## 📄 Лицензия
+## Лицензия
 
 MIT
