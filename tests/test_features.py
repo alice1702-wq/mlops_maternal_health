@@ -1,4 +1,5 @@
 """Тесты feature engineering и preprocessing."""
+
 import pandas as pd
 import pytest
 
@@ -13,14 +14,16 @@ from src.features.preprocessing import Winsorizer
 @pytest.fixture
 def sample_df() -> pd.DataFrame:
     """Мини-датасет для тестов."""
-    return pd.DataFrame({
-        "Age": [15, 25, 40, 60],
-        "SystolicBP": [110, 130, 150, 120],
-        "DiastolicBP": [70, 85, 95, 80],
-        "BS": [5.0, 6.5, 8.0, 7.2],
-        "BodyTemp": [98.0, 98.6, 100.5, 99.0],
-        "HeartRate": [70, 80, 95, 75],
-    })
+    return pd.DataFrame(
+        {
+            "Age": [15, 25, 40, 60],
+            "SystolicBP": [110, 130, 150, 120],
+            "DiastolicBP": [70, 85, 95, 80],
+            "BS": [5.0, 6.5, 8.0, 7.2],
+            "BodyTemp": [98.0, 98.6, 100.5, 99.0],
+            "HeartRate": [70, 80, 95, 75],
+        }
+    )
 
 
 # ─── Feature engineering ─────────────────────────────
@@ -37,8 +40,8 @@ def test_add_age_features(sample_df):
     assert "AgeGroup" in df.columns
     assert "IsTeen" in df.columns
     assert "IsSenior" in df.columns
-    assert df["IsTeen"].iloc[0] == 1    # 15 лет
-    assert df["IsTeen"].iloc[1] == 0    # 25 лет
+    assert df["IsTeen"].iloc[0] == 1  # 15 лет
+    assert df["IsTeen"].iloc[1] == 0  # 25 лет
     assert df["IsSenior"].iloc[3] == 1  # 60 лет
 
 
@@ -47,23 +50,28 @@ def test_add_risk_flags(sample_df):
     df = add_age_features(sample_df)
     df = add_risk_flags(df)
     expected_cols = [
-        "BS_Category", "HighBP_Flag", "Tachycardia_Flag",
-        "Fever_Flag", "RiskScore_Heuristic",
+        "BS_Category",
+        "HighBP_Flag",
+        "Tachycardia_Flag",
+        "Fever_Flag",
+        "RiskScore_Heuristic",
     ]
     for col in expected_cols:
         assert col in df.columns
 
-    assert df["HighBP_Flag"].iloc[2] == 1       # 150/95
+    assert df["HighBP_Flag"].iloc[2] == 1  # 150/95
     assert df["Tachycardia_Flag"].iloc[2] == 1  # 95 уд/мин
-    assert df["Fever_Flag"].iloc[2] == 1        # 100.5°F
+    assert df["Fever_Flag"].iloc[2] == 1  # 100.5°F
 
 
 # ─── Winsorizer (data leakage) ───────────────────────
 def test_winsorizer_fit_transform():
-    df = pd.DataFrame({
-        "x": [1, 2, 3, 4, 5, 1000],
-        "y": [10, 20, 30, 40, 50, 60],
-    })
+    df = pd.DataFrame(
+        {
+            "x": [1, 2, 3, 4, 5, 1000],
+            "y": [10, 20, 30, 40, 50, 60],
+        }
+    )
     w = Winsorizer(cols=["x", "y"])
     df_out = w.fit_transform(df)
 

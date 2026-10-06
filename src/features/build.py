@@ -4,6 +4,7 @@
 Причина: winsorization требует статистик (квантилей) с train-данных,
 поэтому должна фититься отдельно, чтобы избежать data leakage.
 """
+
 from typing import List
 
 import numpy as np
@@ -40,9 +41,7 @@ def add_hemodynamic_features(df: pd.DataFrame) -> pd.DataFrame:
 def add_age_features(df: pd.DataFrame) -> pd.DataFrame:
     """Добавляет возрастные категории и флаги (IsTeen, IsSenior)."""
     df = df.copy()
-    df["AgeGroup"] = pd.cut(
-        df["Age"], bins=AGE_BINS, labels=AGE_LABELS
-    )
+    df["AgeGroup"] = pd.cut(df["Age"], bins=AGE_BINS, labels=AGE_LABELS)
     df["IsTeen"] = (df["Age"] < AGE_TEEN_MAX).astype(int)
     df["IsSenior"] = (df["Age"] >= AGE_SENIOR_MIN).astype(int)
     return df
@@ -62,12 +61,9 @@ def add_risk_flags(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     df["HighBP_Flag"] = (
-        (df["SystolicBP"] >= BP_SYSTOLIC_HIGH)
-        | (df["DiastolicBP"] >= BP_DIASTOLIC_HIGH)
+        (df["SystolicBP"] >= BP_SYSTOLIC_HIGH) | (df["DiastolicBP"] >= BP_DIASTOLIC_HIGH)
     ).astype(int)
-    df["Tachycardia_Flag"] = (
-        df["HeartRate"] > HEART_RATE_TACHYCARDIA
-    ).astype(int)
+    df["Tachycardia_Flag"] = (df["HeartRate"] > HEART_RATE_TACHYCARDIA).astype(int)
     df["Fever_Flag"] = (df["BodyTemp"] >= BODY_TEMP_FEVER).astype(int)
 
     df["RiskScore_Heuristic"] = (
@@ -90,9 +86,7 @@ def encode_categoricals(
 ) -> pd.DataFrame:
     """One-Hot Encoding для категориальных признаков."""
     cols = cols or ["AgeGroup", "BS_Category"]
-    return pd.get_dummies(
-        df, columns=cols, drop_first=False, dtype=int
-    )
+    return pd.get_dummies(df, columns=cols, drop_first=False, dtype=int)
 
 
 # ============================================================

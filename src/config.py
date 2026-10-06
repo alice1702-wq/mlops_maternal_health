@@ -1,4 +1,5 @@
 """Конфигурация проекта MLOps: Maternal Health Risk."""
+
 from dataclasses import dataclass
 from pathlib import Path
 from typing import List
@@ -28,8 +29,8 @@ SHEET_NAME: str = "Таблица1"
 # Медицинские пороги (по рекомендациям ВОЗ)
 # ============================================================
 # Глюкоза (BS)
-BS_NORMAL_MAX: float = 6.1          # < 6.1 — норма
-BS_PREDIABETES_MAX: float = 7.0     # 6.1–7.0 — преддиабет; > 7.0 — гипергликемия
+BS_NORMAL_MAX: float = 6.1  # < 6.1 — норма
+BS_PREDIABETES_MAX: float = 7.0  # 6.1–7.0 — преддиабет; > 7.0 — гипергликемия
 
 # Давление
 BP_SYSTOLIC_HIGH: int = 140
@@ -54,6 +55,7 @@ AGE_SENIOR_MIN: int = 45
 @dataclass
 class Paths:
     """Пути к артефактам проекта."""
+
     # Модели
     logistic_regression: Path = ARTIFACTS_DIR / "logistic_regression.joblib"
     random_forest: Path = ARTIFACTS_DIR / "random_forest.joblib"

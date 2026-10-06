@@ -8,6 +8,7 @@
 Все модели обучаются на одних данных, оцениваются на train/test,
 результаты сравниваются в сводной таблице.
 """
+
 import json
 
 import joblib
@@ -30,6 +31,7 @@ from src.models.overfitting import OverfittingAnalyzer
 
 try:
     from catboost import CatBoostClassifier
+
     CATBOOST_AVAILABLE = True
 except ImportError:
     CATBOOST_AVAILABLE = False
@@ -48,7 +50,7 @@ def get_models() -> dict:
                 max_iter=2000,
                 class_weight="balanced",
             ),
-            True,   # нужен scaler
+            True,  # нужен scaler
         ),
         "Random Forest": (
             RandomForestClassifier(
@@ -88,9 +90,7 @@ def cross_validate_model(
     n_splits: int = CV_SPLITS,
 ) -> dict:
     """5-fold CV для модели. Возвращает средние метрики."""
-    cv = StratifiedKFold(
-        n_splits=n_splits, shuffle=True, random_state=RANDOM_STATE
-    )
+    cv = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=RANDOM_STATE)
     scoring = {
         "accuracy": "accuracy",
         "f1_macro": "f1_macro",
@@ -98,7 +98,12 @@ def cross_validate_model(
         "recall_macro": "recall_macro",
     }
     results = cross_validate(
-        model, X, y, cv=cv, scoring=scoring, n_jobs=-1,
+        model,
+        X,
+        y,
+        cv=cv,
+        scoring=scoring,
+        n_jobs=-1,
     )
     return {
         "cv_f1_macro_mean": float(results["test_f1_macro"].mean()),
@@ -133,7 +138,8 @@ def main() -> None:
     class_names = encoder.classes_.tolist()
 
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y_enc,
+        X,
+        y_enc,
         test_size=TEST_SIZE,
         random_state=RANDOM_STATE,
         stratify=y_enc,
@@ -183,8 +189,10 @@ def main() -> None:
         if name in ("Logistic Regression", "CatBoost"):
             print(f"    CV ({CV_SPLITS}-fold)...")
             cv_results[name] = cross_validate_model(model, X_tr, y_train)
-            print(f"    CV F1-macro: {cv_results[name]['cv_f1_macro_mean']:.4f} "
-                  f"± {cv_results[name]['cv_f1_macro_std']:.4f}")
+            print(
+                f"    CV F1-macro: {cv_results[name]['cv_f1_macro_mean']:.4f} "
+                f"± {cv_results[name]['cv_f1_macro_std']:.4f}"
+            )
 
     # ─── 6. Сводная таблица ─────────────────────────────────
     print("\n[6/6] Сравнение моделей...")

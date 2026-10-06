@@ -1,4 +1,5 @@
 """Обёртка над Optuna для подбора гиперпараметров."""
+
 from typing import Any, Callable
 
 import numpy as np
@@ -63,8 +64,7 @@ class OptunaTuner:
             show_progress_bar=True,
         )
 
-        print(f"\n✅ [{self.model_name}] Лучший F1-macro (CV): "
-              f"{self.study.best_value:.4f}")
+        print(f"\n✅ [{self.model_name}] Лучший F1-macro (CV): " f"{self.study.best_value:.4f}")
         print(f"   Лучшие параметры: {self.study.best_params}")
         return self.study
 

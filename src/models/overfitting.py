@@ -1,4 +1,5 @@
 """Анализ переобучения моделей."""
+
 from typing import Dict
 
 import numpy as np
@@ -45,22 +46,16 @@ class OverfittingAnalyzer:
                 row[f"F1_{split}"] = m.get("f1_macro", np.nan)
                 row[f"Acc_{split}"] = m.get("accuracy", np.nan)
             row["F1_gap"] = row["F1_train"] - row["F1_test"]
-            row["F1_ratio"] = (
-                row["F1_test"] / row["F1_train"]
-                if row["F1_train"] > 0 else np.nan
-            )
+            row["F1_ratio"] = row["F1_test"] / row["F1_train"] if row["F1_train"] > 0 else np.nan
             row["Overfit?"] = (
                 "Да"
-                if (row["F1_gap"] > self.threshold_gap
-                    or row["F1_ratio"] < self.threshold_ratio)
+                if (row["F1_gap"] > self.threshold_gap or row["F1_ratio"] < self.threshold_ratio)
                 else "Нет"
             )
             rows.append(row)
 
         self.summary = (
-            pd.DataFrame(rows)
-            .sort_values("F1_test", ascending=False)
-            .reset_index(drop=True)
+            pd.DataFrame(rows).sort_values("F1_test", ascending=False).reset_index(drop=True)
         )
         return self.summary
 
@@ -73,7 +68,6 @@ class OverfittingAnalyzer:
         print("\n" + "=" * 70)
         print("СВОДНАЯ ТАБЛИЦА МОДЕЛЕЙ")
         print("=" * 70)
-        cols = ["Model", "F1_train", "F1_test", "F1_gap",
-                "F1_ratio", "Overfit?"]
+        cols = ["Model", "F1_train", "F1_test", "F1_gap", "F1_ratio", "Overfit?"]
         print(self.summary[cols].to_string(index=False))
         print("=" * 70)

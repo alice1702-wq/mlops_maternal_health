@@ -4,6 +4,7 @@
 Это позволяет избежать data leakage: границы вычисляются ТОЛЬКО
 на train, а к test применяются те же самые границы.
 """
+
 from typing import Dict, List
 
 import numpy as np
@@ -56,9 +57,7 @@ class Winsorizer:
     def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         """Применяет запомненные границы к данным."""
         if not self.bounds_:
-            raise RuntimeError(
-                "Winsorizer не обучен. Сначала вызовите fit()."
-            )
+            raise RuntimeError("Winsorizer не обучен. Сначала вызовите fit().")
 
         X = X.copy()
         for col, (low, high) in self.bounds_.items():

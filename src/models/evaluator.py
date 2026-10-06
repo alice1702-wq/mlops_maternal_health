@@ -1,4 +1,5 @@
 """Оценка качества ML-моделей: метрики, матрица ошибок, отчёт."""
+
 from typing import Dict, List
 
 import numpy as np
@@ -45,15 +46,9 @@ class ModelEvaluator:
         """
         metrics = {
             "accuracy": accuracy_score(y_true, y_pred),
-            "precision_macro": precision_score(
-                y_true, y_pred, average="macro", zero_division=0
-            ),
-            "recall_macro": recall_score(
-                y_true, y_pred, average="macro", zero_division=0
-            ),
-            "f1_macro": f1_score(
-                y_true, y_pred, average="macro", zero_division=0
-            ),
+            "precision_macro": precision_score(y_true, y_pred, average="macro", zero_division=0),
+            "recall_macro": recall_score(y_true, y_pred, average="macro", zero_division=0),
+            "f1_macro": f1_score(y_true, y_pred, average="macro", zero_division=0),
         }
         self.results[dataset_name] = metrics
         return metrics
@@ -67,26 +62,30 @@ class ModelEvaluator:
         """Строит матрицу ошибок через Plotly (интерактивная)."""
         cm = confusion_matrix(y_true, y_pred)
         cm_norm = cm.astype("float") / cm.sum(axis=1, keepdims=True)
-        annotations = np.array([
-            [f"{cm[i, j]}<br>({cm_norm[i, j]:.1%})" for j in range(cm.shape[1])]
-            for i in range(cm.shape[0])
-        ])
+        annotations = np.array(
+            [
+                [f"{cm[i, j]}<br>({cm_norm[i, j]:.1%})" for j in range(cm.shape[1])]
+                for i in range(cm.shape[0])
+            ]
+        )
 
-        fig = go.Figure(data=go.Heatmap(
-            z=cm,
-            x=self.class_names,
-            y=self.class_names,
-            colorscale="Blues",
-            text=annotations,
-            texttemplate="%{text}",
-            textfont={"size": 13},
-            hovertemplate=(
-                "Истинный: <b>%{y}</b><br>"
-                "Предсказанный: <b>%{x}</b><br>"
-                "Количество: %{z}<extra></extra>"
-            ),
-            colorbar=dict(title="Количество"),
-        ))
+        fig = go.Figure(
+            data=go.Heatmap(
+                z=cm,
+                x=self.class_names,
+                y=self.class_names,
+                colorscale="Blues",
+                text=annotations,
+                texttemplate="%{text}",
+                textfont={"size": 13},
+                hovertemplate=(
+                    "Истинный: <b>%{y}</b><br>"
+                    "Предсказанный: <b>%{x}</b><br>"
+                    "Количество: %{z}<extra></extra>"
+                ),
+                colorbar=dict(title="Количество"),
+            )
+        )
         fig.update_layout(
             title=f"Матрица ошибок ({self.model_name}) — {dataset_name}",
             title_x=0.5,
@@ -106,11 +105,14 @@ class ModelEvaluator:
     ) -> None:
         """Печатает classification_report."""
         print(f"\n--- Отчёт: {self.model_name} ({dataset_name}) ---")
-        print(classification_report(
-            y_true, y_pred,
-            target_names=self.class_names,
-            zero_division=0,
-        ))
+        print(
+            classification_report(
+                y_true,
+                y_pred,
+                target_names=self.class_names,
+                zero_division=0,
+            )
+        )
 
     def show_all(
         self,

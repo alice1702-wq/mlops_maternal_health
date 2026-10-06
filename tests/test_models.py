@@ -1,4 +1,5 @@
 """Тесты метрик и анализа переобучения."""
+
 import numpy as np
 
 from src.models.evaluator import ModelEvaluator
@@ -45,10 +46,12 @@ def test_overfitting_analyzer_detects_gap():
     }
 
     analyzer = OverfittingAnalyzer(threshold_gap=0.10, threshold_ratio=0.85)
-    summary = analyzer.collect({
-        "Good": ev_good,
-        "Overfit": ev_overfit,
-    })
+    summary = analyzer.collect(
+        {
+            "Good": ev_good,
+            "Overfit": ev_overfit,
+        }
+    )
 
     overfit_row = summary[summary["Model"] == "Overfit"].iloc[0]
     good_row = summary[summary["Model"] == "Good"].iloc[0]
